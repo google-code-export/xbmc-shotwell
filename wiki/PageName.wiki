@@ -6,5 +6,5 @@ Pàgina per veure com va el desenvolupament
 
 = Details =
 
-- No m'agafa l'estructura. Suposo que falta algun fitxer
-- He de fer la icona de 256x256 una mica millor (a partir de la icona de 128 + el text, per exemple)
+* No m'agafa l'estructura. Suposo que falta algun fitxer
+* He de fer la icona de 256x256 una mica millor (a partir de la icona de 128 + el text, per exemple)
