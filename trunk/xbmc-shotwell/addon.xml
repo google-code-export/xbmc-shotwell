@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.image.shotwell" name="Shotwell" version="1.0" provider-name="jaume.moral">
+  <requires>
+    <import addon="xbmc.python" version="2.0"/>
+    <import addon="script.module.beautifulsoup" version="3.0.8"/>
+  </requires>
+  <extension point="xbmc.python.script" library="runscript.py">
+    <provides>image</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>linux</platform>
+    <summary lang="en">Shows events, tags and pictures from user's Shotwell library</summary>
+    <summary lang="es">Visualiza los eventos, tags y fotos en la librería de Shotwell del usuario</summary>
+    <summary lang="ca">Visualitza els events, tags i fotos a la llibreria de Shotwell de l'usuari</summary>
+  </extension>
+</addon>
