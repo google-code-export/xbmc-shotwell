@@ -4,82 +4,110 @@ from shotwell import *
 
 # plugin constants
 __plugin__ = "shotwell"
-__author__ = "jaumem"
-__url__ = "http://code.google.com/p/xbmc-addons/"
-__svn_url__ = "http://xbmc-addons.googlecode.com/svn/trunk/plugins/pictures/flickr"
-__version__ = "1.5.4"
+__author__ = "jaume.moral"
+__url__ = "http://code.google.com/p/xbmc-shotwell/"
+__svn_url__ = "http://xbmc-shotwell.googlecode.com/svn/trunk/"
+__version__ = "1.0"
 __settings__ = xbmcaddon.Addon(id='plugin.image.shotwell')
 
-# codi en si                
+# code                
 
-def llistat_categories():
-    handle=int(sys.argv[1])
-    xbmcplugin.addDirectoryItem(handle,url=sys.argv[0]+"?events",isFolder=True,totalItems=3,listitem=xbmcgui.ListItem("Events",iconImage="",thumbnailImage=""))
-    xbmcplugin.addDirectoryItem(handle,url=sys.argv[0]+"?tags",isFolder=True,totalItems=3,listitem=xbmcgui.ListItem("Tags",iconImage="",thumbnailImage=""))
-    xbmcplugin.addDirectoryItem(handle,url=sys.argv[0]+"?favorits",isFolder=True,totalItems=3,listitem=xbmcgui.ListItem("Favorits",iconImage="",thumbnailImage=""))
-    xbmcplugin.endOfDirectory(handle, cacheToDisc=False)
+class XBMCShotwell:		
 
-def llistat_events():
-    # TODO: connectar a la BD per veure els events disponibles
-    handle=int(sys.argv[1])
-    xbmcplugin.addDirectoryItem(handle,url=sys.argv[0]+"?event=ev1",isFolder=True,totalItems=2,listitem=xbmcgui.ListItem("Event1",iconImage="",thumbnailImage=""))
-    xbmcplugin.addDirectoryItem(handle,url=sys.argv[0]+"?event=ev2",isFolder=True,totalItems=2,listitem=xbmcgui.ListItem("Event2",iconImage="",thumbnailImage=""))
-    xbmcplugin.endOfDirectory(handle, cacheToDisc=False)
+	def __init__(self):
+		self.url=sys.argv[0]
+		self.handle=int(sys.argv[1])
+		self.parameters=sys.argv[2]
+		self.shotwell=Shotwell()
 
-def llistat_tags():
-    # TODO: connectar a la BD per veure els tags disponibles
-    handle=int(sys.argv[1])
-    xbmcplugin.addDirectoryItem(handle,url=sys.argv[0]+"?tag=tag1",isFolder=True,totalItems=2,listitem=xbmcgui.ListItem("Tag1",iconImage="",thumbnailImage=""))
-    xbmcplugin.addDirectoryItem(handle,url=sys.argv[0]+"?tag=tag2",isFolder=True,totalItems=2,listitem=xbmcgui.ListItem("Tag2",iconImage="",thumbnailImage=""))
-    xbmcplugin.endOfDirectory(handle, cacheToDisc=False)
+	def home_menu(self):
+		xbmcplugin.addDirectoryItem(
+			self.handle,
+			url=self.url+"?events",
+			isFolder=True,
+			totalItems=2,
+			listitem=xbmcgui.ListItem("Events",iconImage="",thumbnailImage=""))
+		xbmcplugin.addDirectoryItem(
+			self.handle,
+			url=self.url+"?tags",
+			isFolder=True,
+			totalItems=2,
+			listitem=xbmcgui.ListItem("Tags",iconImage="",thumbnailImage=""))
+		xbmcplugin.endOfDirectory(self.handle, cacheToDisc=False)
 
-def llistat_tag(tag):
-    # TODO: obtenir les fotos del tag que em passen
-    handle=int(sys.argv[1])
-    shotwell=Shotwell()
-    l=shotwell.picture_list()
-    print l
-    for f in l:
-        listitem=xbmcgui.ListItem(f['filename'], 
-	    iconImage=f['icon'], 
-	    thumbnailImage=f['thumbnail'])
-        xbmcplugin.addDirectoryItem(handle,f['filename'],isFolder=False,totalItems=len(l),listitem=listitem)
-    xbmcplugin.endOfDirectory(handle, cacheToDisc=False)
-#        listitem=xbmcgui.ListItem(f['filename'], 
-#	    iconImage=f['icon']"/home/jaumem/.shotwell/thumbs/thumbs128/thumb000000000000000a.jpg", 
-#	    thumbnailImage="/home/jaumem/.shotwell/thumbs/thumbs360/thumb000000000000000a.jpg")
+	def all_events(self):
+		events=self.shotwell.event_list()
+		for e in events:
+			start=e['start'].strftime('%d/%m/%Y')
+			end=e['end'].strftime('%d/%m/%Y')
+			dates=start
+			if start != end:
+				dates="%s - %s" % (start,end)
+			if e['name'] == None:
+				name=dates
+			else:
+				name="%s (%s)" % (e['name'], dates)
+			xbmcplugin.addDirectoryItem(
+				self.handle,
+				url="%s?event=%i" % (self.url,e['id']),
+				isFolder=True,
+				totalItems=len(events),
+				listitem=xbmcgui.ListItem(name,iconImage=e['icon'],thumbnailImage=e['thumbnail'])
+			)
+		xbmcplugin.endOfDirectory(self.handle, cacheToDisc=False)
 
+	def all_tags(self):
+		tags=self.shotwell.tag_list()
+		for t in tags:
+		   	xbmcplugin.addDirectoryItem(
+		      	self.handle,
+		      	url="%s?tag=%i" % (self.url,t['id']),
+		      	isFolder=True,
+		      	totalItems=len(tags),
+		      	listitem=xbmcgui.ListItem(t['name'],iconImage="",thumbnailImage="")
+		   	)
+		xbmcplugin.endOfDirectory(self.handle, cacheToDisc=False)
 
-def llistat_favorits():
-    # TODO: obtenir les fotos favorites
-    llistat_tag("favo")
+	def tag_pictures(self,tag_id):
+		self.fill_picture_list(self.shotwell.picture_list_tag(tag_id))
 
-def llistat_event(event):
-    # TODO: obtenir les fotos de l'event que em passen.
-    # Per aixo farem una classe shotwell que obtingui aquesta informacio com a llistes de fotos, i les fotos tindran les dades que volem.
-    # A partir d'aquestes llistes, muntarem els "listitems" que calguin.
-    llistat_tag(event)
+	def event_pictures(self,event_id):
+		self.fill_picture_list(self.shotwell.picture_list_event(event_id))
+
+	def fill_picture_list(self,l):
+		for f in l:
+		    xbmcplugin.addDirectoryItem(
+				self.handle,
+				f['filename'],
+				isFolder=False,
+				totalItems=len(l),
+				listitem=xbmcgui.ListItem(f['name'], iconImage=f['icon'],thumbnailImage=f['thumbnail'])
+		)
+		xbmcplugin.endOfDirectory(self.handle, cacheToDisc=False)
+
+	def execute(self):
+		if ( "events" in self.parameters ):
+			self.all_events()
+		elif ( "tags" in self.parameters ):
+			self.all_tags()
+		elif ( "tag=" in self.parameters ):
+			self.tag_pictures(int(self.parameters.split("=")[1]))
+		elif ( "event=" in self.parameters ):
+			self.event_pictures(int(self.parameters.split("=")[1]))
+		else:
+			self.home_menu()
 
 
 if ( __name__ == "__main__" ):
-    xbmc.log("Hello world del plugin")
-    # sys.argv[0] es la URL del plugin
-    # sys.argv[2] es el parametre que li ha arribat al plugin
+    # sys.argv[0] is plugin's URL 
+    # sys.argv[1] is the handle
+    # sys.argv[2] if the query string
     # Quan un element de la llista es de tipus carpeta, li passem la URL del plugin i concatenat amb un "?", la resta de parametres
     # que li volem passar. En aquest cas, el parametres seran:
-    # events | favorits | tags | tag=nom_del_tag | event=nom_del_event 
+    # events | favorits | tags | tag=tag_id | event=event_id 
     # exemple:
-    #   plugin://pictures/fspot/?tag=platges
-    if ( "events" in sys.argv[2] ):
-	llistat_events()
-    elif ( "favorits" in sys.argv[2] ):
-	llistat_favorits()
-    elif ( "tags" in sys.argv[2] ):
-	llistat_tags()
-    elif ( "tag=" in sys.argv[2] ):
-	llistat_tag(sys.argv[2][5:])
-    elif ( "event=" in sys.argv[2] ):
-	llistat_event(sys.argv[2][6:])
-    else:	
-	llistat_categories()
+    #   plugin://plugin.image.shotwell/?tag=platges
+
+    plugin=XBMCShotwell()
+    plugin.execute()
 
