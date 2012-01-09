@@ -2,9 +2,7 @@
 Shotwell BD Access
 '''
 
-import sys
 import os
-import xbmc
 import sqlite3
 import datetime
 
