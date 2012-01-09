@@ -9,6 +9,8 @@ __url__ = "http://code.google.com/p/xbmc-shotwell/"
 __svn_url__ = "http://xbmc-shotwell.googlecode.com/svn/trunk/"
 __version__ = "1.0"
 __settings__ = xbmcaddon.Addon(id='plugin.image.shotwell')
+__language__ = __settings__.getLocalizedString
+DATE_FORMAT = xbmc.getRegion('dateshort').lower()
 
 # code                
 
@@ -26,26 +28,26 @@ class XBMCShotwell:
 			url=self.url+"?events",
 			isFolder=True,
 			totalItems=2,
-			listitem=xbmcgui.ListItem("Events",iconImage="",thumbnailImage=""))
+			listitem=xbmcgui.ListItem(__language__(30000),iconImage="",thumbnailImage=""))
 		xbmcplugin.addDirectoryItem(
 			self.handle,
 			url=self.url+"?tags",
 			isFolder=True,
 			totalItems=2,
-			listitem=xbmcgui.ListItem("Tags",iconImage="",thumbnailImage=""))
+			listitem=xbmcgui.ListItem(__language__(30001),iconImage="",thumbnailImage=""))
 		xbmcplugin.addDirectoryItem(
 			self.handle,
 			url=self.url+"?last",
 			isFolder=True,
 			totalItems=2,
-			listitem=xbmcgui.ListItem("Last import",iconImage="",thumbnailImage=""))
+			listitem=xbmcgui.ListItem(__language__(30002),iconImage="",thumbnailImage=""))
 		xbmcplugin.endOfDirectory(self.handle, cacheToDisc=False)
 
 	def all_events(self):
 		events=self.shotwell.event_list()
 		for e in events:
-			start=e['start'].strftime('%d/%m/%Y')
-			end=e['end'].strftime('%d/%m/%Y')
+			start=e['start'].strftime(DATE_FORMAT)
+			end=e['end'].strftime(DATE_FORMAT)
 			dates=start
 			if start != end:
 				dates="%s - %s" % (start,end)
