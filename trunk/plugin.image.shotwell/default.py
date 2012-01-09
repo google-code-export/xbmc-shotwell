@@ -33,6 +33,12 @@ class XBMCShotwell:
 			isFolder=True,
 			totalItems=2,
 			listitem=xbmcgui.ListItem("Tags",iconImage="",thumbnailImage=""))
+		xbmcplugin.addDirectoryItem(
+			self.handle,
+			url=self.url+"?last",
+			isFolder=True,
+			totalItems=2,
+			listitem=xbmcgui.ListItem("Last import",iconImage="",thumbnailImage=""))
 		xbmcplugin.endOfDirectory(self.handle, cacheToDisc=False)
 
 	def all_events(self):
@@ -71,6 +77,9 @@ class XBMCShotwell:
 	def tag_pictures(self,tag_id):
 		self.fill_picture_list(self.shotwell.picture_list_tag(tag_id))
 
+	def last_pictures(self):
+		self.fill_picture_list(self.shotwell.picture_list_last())
+
 	def event_pictures(self,event_id):
 		self.fill_picture_list(self.shotwell.picture_list_event(event_id))
 
@@ -90,6 +99,8 @@ class XBMCShotwell:
 			self.all_events()
 		elif ( "tags" in self.parameters ):
 			self.all_tags()
+		elif ( "last" in self.parameters ):
+			self.last_pictures()
 		elif ( "tag=" in self.parameters ):
 			self.tag_pictures(int(self.parameters.split("=")[1]))
 		elif ( "event=" in self.parameters ):
