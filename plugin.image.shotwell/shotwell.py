@@ -39,6 +39,9 @@ class Shotwell:
 	def picture_list_event(self,event_id):
 		return self.picture_list('select id, filename from phototable where event_id=%s' % (event_id))
 
+	def picture_list_last(self):
+		return self.picture_list('select id, filename from phototable where import_id = (select max(import_id) from phototable) order by id desc')
+
 	def picture_list_tag(self,tag_id):
 		# obtenim la llista de thumbnails separats per comes
 		cursor=self.conn.cursor()
