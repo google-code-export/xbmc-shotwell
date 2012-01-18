@@ -10,6 +10,6 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Shotwell pictures</summary>
     <description lang="en">Shotwell picture navigator</description>
-    <platform>all</platform>
+    <platform>linux</platform>
   </extension>
 </addon>
