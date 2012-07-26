@@ -41,14 +41,14 @@ class Shotwell:
 		return self.picture_list('select id, filename from phototable where import_id = (select max(import_id) from phototable) order by id desc')
 
 	def picture_list_tag(self,tag_id):
-		# obtenim la llista de thumbnails separats per comes
+        # get a comma separated thumbnail list from a database field
 		cursor=self.conn.cursor()
 		cursor.execute('select photo_id_list from tagtable where id=%i' % (tag_id))
 		row=cursor.fetchone()
 		cursor.close()
 		thumbs=row[0].split(",")
 		thumbs.pop()
-		# i ho trasnformem a una llista de numeros decimals despres de convertir els hexa
+	    # and transform to a decimal number list after converting it from hexadecimal
 		l=[]
 		for f in thumbs:
 			l.append(str(int(f[6:],16)))

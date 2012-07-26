@@ -7,7 +7,7 @@ __plugin__ = "shotwell"
 __author__ = "jaume.moral"
 __url__ = "http://code.google.com/p/xbmc-shotwell/"
 __svn_url__ = "http://xbmc-shotwell.googlecode.com/svn/trunk/"
-__version__ = "1.0"
+__version__ = "1.1"
 __settings__ = xbmcaddon.Addon(id='plugin.image.shotwell')
 __language__ = __settings__.getLocalizedString
 DATE_FORMAT = xbmc.getRegion('dateshort').lower()
@@ -115,11 +115,17 @@ if ( __name__ == "__main__" ):
     # sys.argv[0] is plugin's URL 
     # sys.argv[1] is the handle
     # sys.argv[2] if the query string
-    # Quan un element de la llista es de tipus carpeta, li passem la URL del plugin i concatenat amb un "?", la resta de parametres
-    # que li volem passar. En aquest cas, el parametres seran:
-    # events | favorits | tags | tag=tag_id | event=event_id 
-    # exemple:
-    #   plugin://plugin.image.shotwell/?tag=platges
+    # When we click on a folter item in a list, plugin URL is called as it if was a web URL
+    # Parameters are appened at the end of the URL after a "?"
+    # Possible parameters are
+    # - events
+    # - favorits
+	# - tags
+    # - tag=tag_id
+    # - event=event_id 
+    # Exemples:
+    #   plugin://plugin.image.shotwell/?tag=mountains
+    #   plugin://plugin.image.shotwell/?events
 
     plugin=XBMCShotwell()
     plugin.execute()
