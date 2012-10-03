@@ -16,7 +16,10 @@ class Shotwell:
 		self.conn=sqlite3.connect(bd)
 		self.conn.isolation_level = None
 
-	def picture_list (self,sql):
+	def picture_list (self,sql, flagged=False):
+		if flagged:
+			sql+=" and flags=16"
+		sql=sql+" order by id";
 		cursor=self.conn.cursor()
 		rows=cursor.execute(sql)
 		l=[]
@@ -32,15 +35,17 @@ class Shotwell:
 		    })
 		cursor.close()
 		return l
-		
 
-	def picture_list_event(self,event_id):
-		return self.picture_list('select id, filename from phototable where event_id=%s' % (event_id))
+	def picture_list_flagged(self):
+		return self.picture_list('select id, filename from phototable where 1=1',True)
 
-	def picture_list_last(self):
-		return self.picture_list('select id, filename from phototable where import_id = (select max(import_id) from phototable) order by id desc')
+	def picture_list_event(self,event_id,flagged):
+		return self.picture_list('select id, filename from phototable where event_id=%s' % (event_id), flagged)
 
-	def picture_list_tag(self,tag_id):
+	def picture_list_last(self,flagged):
+		return self.picture_list('select id, filename from phototable where import_id = (select max(import_id) from phototable)',flagged)
+
+	def picture_list_tag(self,tag_id,flagged):
         # get a comma separated thumbnail list from a database field
 		cursor=self.conn.cursor()
 		cursor.execute('select photo_id_list from tagtable where id=%i' % (tag_id))
@@ -52,7 +57,7 @@ class Shotwell:
 		l=[]
 		for f in thumbs:
 			l.append(str(int(f[6:],16)))
-		return self.picture_list('select id, filename from phototable where id in (%s)' % (','.join(l)))
+		return self.picture_list('select id, filename from phototable where id in (%s)' % (','.join(l)),flagged)
 
 
 	def event_list(self):
