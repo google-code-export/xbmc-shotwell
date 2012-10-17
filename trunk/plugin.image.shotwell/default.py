@@ -60,7 +60,7 @@ class XBMCShotwell:
 			if e['name'] == None:
 				name=dates
 			else:
-				name="%s (%s)" % (e['name'], dates)
+				name="%s (%s)" % (e['name'],dates)
 			xbmcplugin.addDirectoryItem(
 				self.handle,
 				url="%s?event=%i" % (self.url,e['id']),

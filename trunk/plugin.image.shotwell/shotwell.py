@@ -63,7 +63,7 @@ class Shotwell:
 	def event_list(self):
 		cursor=self.conn.cursor()
 		rows=cursor.execute('''
-			select e.id, name, min(p.time_created) as start,max(p.time_created) as end, primary_source_id
+			select e.id, name, min(p.timestamp) as start,max(p.timestamp) as end, primary_source_id
 			from eventtable e,phototable p where event_id=e.id 
 			group by event_id order by 3 desc
 		''');
