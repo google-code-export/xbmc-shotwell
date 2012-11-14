@@ -9,8 +9,8 @@ import datetime
 class Shotwell:
 
 	def __init__( self ):
-		self.thumbs128='%s/thumbs128' % (self.resolve_path_thumbs)
-		self.thumbs360='%s/thumbs360' % (self.resolve_path_thumbs)
+		self.thumbs128='%s/thumbs128' % (self.resolve_path_thumbs())
+		self.thumbs360='%s/thumbs360' % (self.resolve_path_thumbs())
 		bd=self.resolve_path_bd()
 		self.conn=sqlite3.connect(bd)
 		self.conn.isolation_level = None
@@ -24,9 +24,9 @@ class Shotwell:
 
 	def resolve_path_thumbs(self):
 		thumbs=os.path.expanduser("~/.cache/shotwell/thumbs")
-		if os.path.isfile(thumbs): return thumbs
+		if os.path.isdir(thumbs): return thumbs
 		thumbs=os.path.expanduser("~/.shotwell/thumbs")
-		if os.path.isfile(thumbs): return thumbs
+		if os.path.isdir(thumbs): return thumbs
 		return ""
 
 
