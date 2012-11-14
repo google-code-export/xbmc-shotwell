@@ -19,33 +19,34 @@ class XBMCShotwell:
 	def __init__(self):
 		self.url=sys.argv[0]
 		self.handle=int(sys.argv[1])
-		self.parameters=sys.argv[2]
+		self.query_string=sys.argv[2].lstrip('?')
+		self.parameters={}
+		if len(self.query_string)>0:
+			for p in self.query_string.split("&"):
+				(k,v)=p.split("=")
+				self.parameters[k]=v		
 		self.shotwell=Shotwell()
 
 	def home_menu(self):
 		xbmcplugin.addDirectoryItem(
 			self.handle,
-			url=self.url+"?events",
+			url="%s?folder=events" % (self.url),
 			isFolder=True,
-			totalItems=2,
 			listitem=xbmcgui.ListItem(__language__(30000),iconImage="",thumbnailImage=""))
 		xbmcplugin.addDirectoryItem(
 			self.handle,
-			url=self.url+"?tags",
+			url="%s?folder=tags" % (self.url),
 			isFolder=True,
-			totalItems=2,
 			listitem=xbmcgui.ListItem(__language__(30001),iconImage="",thumbnailImage=""))
 		xbmcplugin.addDirectoryItem(
 			self.handle,
-			url=self.url+"?last",
+			url="%s?folder=last" % (self.url),
 			isFolder=True,
-			totalItems=2,
 			listitem=xbmcgui.ListItem(__language__(30002),iconImage="",thumbnailImage=""))
 		xbmcplugin.addDirectoryItem(
 			self.handle,
-			url=self.url+"?flagged",
+			url="%s?flagged=1" % (self.url),
 			isFolder=True,
-			totalItems=2,
 			listitem=xbmcgui.ListItem(__language__(30003),iconImage="",thumbnailImage=""))
 		xbmcplugin.endOfDirectory(self.handle, cacheToDisc=False)
 
@@ -99,7 +100,7 @@ class XBMCShotwell:
 		if not flagged:
 			xbmcplugin.addDirectoryItem(
 				self.handle,
-				url="%s?%s=flagged" % (self.url,self.parameters),
+				url="%s?flagged=1&%s" % (self.url,self.query_string),
 				isFolder=True,
 				totalItems=len(l)+1,
 				listitem=xbmcgui.ListItem(__language__(30003), iconImage="",thumbnailImage="")
@@ -115,20 +116,26 @@ class XBMCShotwell:
 		xbmcplugin.endOfDirectory(self.handle, cacheToDisc=False)
 
 	def execute(self):
+		print "-----------"
+		print self.parameters
 		flagged=False
 		if ("flagged" in self.parameters):
 			flagged=True
 
-		if ( "events" in self.parameters ):
-			self.all_events()
-		elif ( "tags" in self.parameters ):
-			self.all_tags()
-		elif ( "last" in self.parameters ):
-			self.last_pictures(flagged)
-		elif ( "tag=" in self.parameters ):
-			self.tag_pictures(int(self.parameters.split("=")[1]),flagged)
-		elif ( "event=" in self.parameters ):
-			self.event_pictures(int(self.parameters.split("=")[1]),flagged)
+		if ("folder" in self.parameters):
+			folder=self.parameters["folder"]
+			if (folder=="events"):
+				self.all_events()
+			elif (folder=="tags"):
+				self.all_tags()
+			elif (folder=="last"):
+				self.last_pictures(flagged)
+
+		elif ( "tag" in self.parameters ):
+			self.tag_pictures(int(self.parameters["tag"]),flagged)
+
+		elif ( "event" in self.parameters ):
+			self.event_pictures(int(self.parameters["event"]),flagged)
 		else:
 			if not flagged:
 				self.home_menu()
@@ -137,22 +144,22 @@ class XBMCShotwell:
 
 
 if ( __name__ == "__main__" ):
-    # sys.argv[0] is plugin's URL 
-    # sys.argv[1] is the handle
-    # sys.argv[2] if the query string
-    # When we click on a folter item in a list, plugin URL is called as it if was a web URL
-    # Parameters are appened at the end of the URL after a "?"
-    # Possible parameters are
-    # - events
-    # - last
-	# - tags
-    # - tag=tag_id
-    # - event=event_id 
-    # - as an optional parameter... flagged
-    # Exemples:
-    #   plugin://plugin.image.shotwell/?tag=mountains
-    #   plugin://plugin.image.shotwell/?events
+    	# sys.argv[0] is plugin's URL 
+    	# sys.argv[1] is the handle
+    	# sys.argv[2] if the query string
+    	# When we click on a folter item in a list, plugin URL is called as it if was a web URL
+    	# Parameters are appened at the end of the URL after a "?"
+    	# Possible parameters are
+    	# - folder=events
+    	# - folder=last
+	# - folder=tags
+    	# - tag=tag_id
+    	# - event=event_id 
+    	# - as an optional parameter... flagged=1
+    	# Exemples:
+    	#   plugin://plugin.image.shotwell/?tag=mountains
+    	#   plugin://plugin.image.shotwell/?flagged=1&folder=events
 
-    plugin=XBMCShotwell()
-    plugin.execute()
+	plugin=XBMCShotwell()
+	plugin.execute()
 

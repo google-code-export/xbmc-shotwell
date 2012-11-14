@@ -6,15 +6,29 @@ import os
 import sqlite3
 import datetime
 
-bd=os.path.expanduser("~/.shotwell/data/photo.db")
-thumbs128=os.path.expanduser("~/.shotwell/thumbs/thumbs128")
-thumbs360=os.path.expanduser("~/.shotwell/thumbs/thumbs360")
-
 class Shotwell:
 
 	def __init__( self ):
+		self.thumbs128='%s/thumbs128' % (self.resolve_path_thumbs)
+		self.thumbs360='%s/thumbs360' % (self.resolve_path_thumbs)
+		bd=self.resolve_path_bd()
 		self.conn=sqlite3.connect(bd)
 		self.conn.isolation_level = None
+
+	def resolve_path_bd(self):
+		bd=os.path.expanduser("~/.local/share/shotwell/data/photo.db")
+		if os.path.isfile(bd): return bd
+		bd=os.path.expanduser("~/.shotwell/data/photo.db")
+		if os.path.isfile(bd): return bd
+		return ""
+
+	def resolve_path_thumbs(self):
+		thumbs=os.path.expanduser("~/.cache/shotwell/thumbs")
+		if os.path.isfile(thumbs): return thumbs
+		thumbs=os.path.expanduser("~/.shotwell/thumbs")
+		if os.path.isfile(thumbs): return thumbs
+		return ""
+
 
 	def picture_list (self,sql, flagged=False):
 		if flagged:
@@ -30,8 +44,8 @@ class Shotwell:
 				'id': id,
 				'name': os.path.basename(filename),
 				'filename':filename,
-				'icon':'%s/thumb%016x.jpg' % (thumbs128,id),
-				'thumbnail': '%s/thumb%016x.jpg' % (thumbs360,id)
+				'icon':'%s/thumb%016x.jpg' % (self.thumbs128,id),
+				'thumbnail': '%s/thumb%016x.jpg' % (self.thumbs360,id)
 		    })
 		cursor.close()
 		return l
@@ -74,8 +88,8 @@ class Shotwell:
 				'name':row[1],
 				'start':datetime.datetime.fromtimestamp(row[2]),
 				'end':datetime.datetime.fromtimestamp(row[3]),
-				'icon':'%s/%s.jpg' % (thumbs128,row[4]),
-				'thumbnail': '%s/%s.jpg' % (thumbs360,row[4])
+				'icon':'%s/%s.jpg' % (self.thumbs128,row[4]),
+				'thumbnail': '%s/%s.jpg' % (self.thumbs360,row[4])
 			})
 		return l
 
