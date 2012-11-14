@@ -116,8 +116,6 @@ class XBMCShotwell:
 		xbmcplugin.endOfDirectory(self.handle, cacheToDisc=False)
 
 	def execute(self):
-		print "-----------"
-		print self.parameters
 		flagged=False
 		if ("flagged" in self.parameters):
 			flagged=True
