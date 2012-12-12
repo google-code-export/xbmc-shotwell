@@ -10,7 +10,7 @@ __svn_url__ = "http://xbmc-shotwell.googlecode.com/svn/trunk/"
 __version__ = "1.3.2"
 __settings__ = xbmcaddon.Addon(id='plugin.image.shotwell')
 __language__ = __settings__.getLocalizedString
-DATE_FORMAT = xbmc.getRegion('dateshort').lower()
+DATE_FORMAT = xbmc.getRegion('dateshort')
 
 # code                
 
