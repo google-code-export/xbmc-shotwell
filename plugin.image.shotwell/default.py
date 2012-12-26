@@ -25,7 +25,7 @@ class XBMCShotwell:
 			for p in self.query_string.split("&"):
 				(k,v)=p.split("=")
 				self.parameters[k]=v		
-		self.shotwell=Shotwell()
+		self.shotwell=Shotwell(__settings__)
 
 	def home_menu(self):
 		xbmcplugin.addDirectoryItem(
