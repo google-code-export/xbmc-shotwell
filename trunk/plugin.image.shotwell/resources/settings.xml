@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-    <setting id="path_db" type="folder" label="30004" default="" />
+    <setting id="path_db" type="file" label="30004" default="" />
     <setting id="path_thumbs" type="folder" label="30005" default="" />
 </settings>
