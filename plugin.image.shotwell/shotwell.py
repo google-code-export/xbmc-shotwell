@@ -9,33 +9,34 @@ import datetime
 class Shotwell:
 
 	def __init__( self,settings ):
-		if not settings.getSetting("path_db"):
-			path_db=self.resolve_path_db()
-			settings.setSetting("path_db",path_db)
-		path_db=settings.getSetting("path_db")		
-		if not settings.getSetting("path_thumbs"):
-			path_thumbs=self.resolve_path_thumbs()
-			settings.setSetting("path_thumbs",path_thumbs)
-		path_thumbs=settings.getSetting("path_thumbs")
+		path_db=self.resolve_path_db(settings)
+		path_thumbs=self.resolve_path_thumbs(settings)
 		self.thumbs128='%s/thumbs128' % (path_thumbs)
 		self.thumbs360='%s/thumbs360' % (path_thumbs)
 		self.conn=sqlite3.connect(path_db)
 		self.conn.isolation_level = None
 
-	def resolve_path_db(self):
+	def resolve_path_db(self,settings):
+		path_db=settings.getSetting("path_db")
+		if os.path.isfile(path_db): return path_db
+		path_db=settings.getSetting("path_db2")
+		if os.path.isfile(path_db): return path_db
 		path_db=os.path.expanduser("~/.local/share/shotwell/data/photo.db")
 		if os.path.isfile(path_db): return path_db
 		path_db=os.path.expanduser("~/.shotwell/data/photo.db")
 		if os.path.isfile(path_db): return path_db
 		return ""
 
-	def resolve_path_thumbs(self):
+	def resolve_path_thumbs(self,settings):
+		thumbs=settings.getSetting("path_thumbs")
+		if os.path.isdir(thumbs): return thumbs
+		thumbs=settings.getSetting("path_thumbs2")	
+		if os.path.isdir(thumbs): return thumbs
 		thumbs=os.path.expanduser("~/.cache/shotwell/thumbs")
 		if os.path.isdir(thumbs): return thumbs
 		thumbs=os.path.expanduser("~/.shotwell/thumbs")
 		if os.path.isdir(thumbs): return thumbs
 		return ""
-
 
 	def picture_list (self,sql, flagged=False):
 		if flagged:

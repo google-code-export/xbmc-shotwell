@@ -4,6 +4,8 @@
     <string id="30001">Etiquetes</string>
     <string id="30002">Última importació</string>
     <string id="30003">Senyalades</string>
-    <string id="30004">Path de la base de dades de Shotwell</string>
-    <string id="30005">Path del cache de imatges de Shotwell</string>
+    <string id="30004">Path del fitxer de base de dades de Shotwell</string>
+    <string id="30005">Path del cache d'imatges de Shotwell</string>
+    <string id="30006">Path primari</string>
+    <string id="30007">Path secundari</string>
 </strings>
