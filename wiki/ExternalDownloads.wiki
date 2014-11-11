@@ -1,9 +1,0 @@
-#summary One-sentence summary of this page.
-
-New versions of xbmc-showtwell are now hostes on Google Drive (thanks Google for screwing up the Downloads tab)
-
-https://drive.google.com/folderview?id=0BzZEUtu59kGWRTFFTjFrYlRQYzg
-
-Older versions are hosted as regular Downloads in Google Code
-
-https://code.google.com/p/xbmc-shotwell/wiki/Downloads
