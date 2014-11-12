@@ -2,9 +2,9 @@
 
 Current version in *plugin.image.shotwell-1.4.5.zip*
 
-New versions of xbmc-showtwell are now hosted on Google Drive (thanks Google for screwing up the Downloads tab)
+New versions of xbmc-showtwell are now hosted on Github (thanks Google for screwing up the Downloads tab)
 
-https://drive.google.com/folderview?id=0BzZEUtu59kGWRTFFTjFrYlRQYzg
+https://github.com/jaumemoral/xbmc-shotwell
 
 Older versions are hosted as regular Downloads in Google Code
 
